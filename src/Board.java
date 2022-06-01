@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class Board extends JPanel implements ActionListener {
 
-    private Timer t = new Timer(75, this);
+    private Timer t = new Timer(100, this);
     public String state;
     private Snake snake;
     private Food food;
@@ -34,8 +34,7 @@ public class Board extends JPanel implements ActionListener {
         if (state == "START") {
             gp.setColor(Color.white);
             gp.drawString("Press Any Key", Game.w/2 * Game.d - 40, Game.h/2 * Game.d - 20);
-        }
-        else if (state == "RUNNING") {
+        } else if (state == "RUNNING") {
             gp.setColor(Color.red);
             gp.fillRect(food.getX() * Game.d, food.getY() * Game.d, Game.d, Game.d);
             gp.setColor(Color.green);

@@ -1,5 +1,8 @@
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class Snake {
 
@@ -10,6 +13,8 @@ public class Snake {
 
     private String move;
 
+    private Queue<String> pendingMove = new CircularFifoQueue<>(2);
+
     public Snake() {
         body = new ArrayList<>();
 
@@ -17,41 +22,57 @@ public class Snake {
         temp.setLocation(Game.w / 2 * Game.d, Game.h / 2 * Game.d);
         body.add(temp);
 
-        temp = new Rectangle(d,d);
+        temp = new Rectangle(d, d);
         temp.setLocation((w / 2 - 1) * d, (h / 2) * d);
         body.add(temp);
 
-        temp = new Rectangle(d,d);
+        temp = new Rectangle(d, d);
         temp.setLocation((w / 2 - 2) * d, (h / 2) * d);
         body.add(temp);
 
-        move = "NOTHING";
+        move = "RIGHT";
     }
 
     private Rectangle updateSnake() {
         Rectangle first = body.get(0);
         Rectangle temp = new Rectangle(Game.d, Game.d);
-        if (move == "UP") {
+        System.out.println("Current movement: " + move);
+        System.out.println("Current queue: " + pendingMove);
+        String movement = pendingMove.poll();
+        if (movement == null) {
+            movement = this.move;
+        }
+        if (movement == "UP") {
             temp.setLocation(first.x, first.y - Game.d);
-        } else if (move == "DOWN") {
+            setMove("UP");
+        } else if (movement == "DOWN") {
             temp.setLocation(first.x, first.y + Game.d);
-        } else if (move == "LEFT") {
+            setMove("DOWN");
+        } else if (movement == "LEFT") {
             temp.setLocation(first.x - Game.d, first.y);
-        } else if (move == "RIGHT") {
+            setMove("LEFT");
+        } else if (movement == "RIGHT") {
             temp.setLocation(first.x + Game.d, first.y);
+            setMove("RIGHT");
         }
         return temp;
     }
 
+    public void pendMove(String movement) {
+        pendingMove.add(movement);
+    }
+
     public void move() {
+        System.out.println("Move method ran");
         if (move != "NOTHING") {
             Rectangle temp = updateSnake();
             body.add(0, temp);
-            body.remove(body.size()-1);
+            body.remove(body.size() - 1);
         }
     }
 
     public void grow() {
+        System.out.println("Grow method ran");
         Rectangle temp = updateSnake();
         body.add(0, temp);
     }
@@ -76,19 +97,8 @@ public class Snake {
         return move;
     }
 
-    public void up() {
-        move = "UP";
+    public void setMove(String movement) {
+        this.move = movement;
     }
 
-    public void down() {
-        move = "DOWN";
-    }
-
-    public void left() {
-        move = "LEFT";
-    }
-
-    public void right() {
-        move = "RIGHT";
-    }
 }

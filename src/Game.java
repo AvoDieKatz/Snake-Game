@@ -40,6 +40,7 @@ public class Game implements KeyListener {
             } else if (check_wall_collision() || check_self_collision()) {
                 board.state = "END";
             } else {
+                System.out.println("Else statement ran");
                 snake.move();
             }
         }
@@ -72,19 +73,30 @@ public class Game implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         int keyCode = e.getKeyCode();
+        System.out.println("Current Key code: " + keyCode);
 
         if (board.state == "RUNNING") {
-            if (keyCode == KeyEvent.VK_UP && snake.getMove() != "DOWN") {
-                snake.up();
-            }
-            if (keyCode == KeyEvent.VK_DOWN && snake.getMove() != "UP") {
-                snake.down();
-            }
-            if (keyCode == KeyEvent.VK_RIGHT && snake.getMove() != "LEFT") {
-                snake.right();
-            }
-            if (keyCode == KeyEvent.VK_LEFT && snake.getMove() != "RIGHT") {
-                snake.left();
+            switch (keyCode) {
+                case 38: //UP
+                    if (snake.getMove() != "DOWN") {
+                        snake.pendMove("UP");
+                    }
+                    break;
+                case 39: //RIGHT
+                    if (snake.getMove() != "LEFT") {
+                        snake.pendMove("RIGHT");
+                    }
+                    break;
+                case 40: //DOWN
+                    if (snake.getMove() != "UP") {
+                        snake.pendMove("DOWN");
+                    }
+                    break;
+                case 37: //LEFT
+                    if (snake.getMove() != "RIGHT") {
+                        snake.pendMove("LEFT");
+                    }
+                    break;
             }
         } else {
             this.start();
@@ -93,14 +105,10 @@ public class Game implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        // No need to implement
-    }
+    public void keyTyped(KeyEvent e) { }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        // No need to implement
-    }
+    public void keyReleased(KeyEvent e) { }
 
     public Snake getSnake() {
         return snake;
